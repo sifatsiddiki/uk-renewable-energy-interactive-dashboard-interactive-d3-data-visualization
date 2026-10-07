@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Renewable Energy Dashboard</title>
+  <meta name="description" content="Interactive dashboard exploring UK renewable energy sources and their share of total UK energy consumption from 1990 to 2023, based on ONS Energy use: renewable and waste sources data.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     Title, dashboard question, filter controls, selection badges,
+     and a short interaction-model hint.
+     ============================================================ -->
+<header>
+  <div class="hdr-left">
+    <h1>UK Renewable Energy Dashboard</h1>
+    <p class="dash-q">
+      <span class="q-lbl">Question:</span>
+      Which sources drove renewable growth, and how did this change renewables&rsquo; share of UK energy use?
+    </p>
+  </div>
+
+  <div class="hdr-right">
+    <div class="filter-bar">
+      <label for="yrStart">From</label>
+      <select id="yrStart" aria-label="Start year"></select>
+      <label for="yrEnd">To</label>
+      <select id="yrEnd" aria-label="End year"></select>
+      <button id="brushBtn" type="button" aria-pressed="false" title="Drag a year range on the line chart">Range select</button>
+      <button id="resetBtn" type="button">Reset</button>
+    </div>
+
+    <!-- Selection badges always show the active filter combination. -->
+    <div class="sel-state" id="selState">
+      <span class="badge" id="bRange">Range <b id="stRange">1990&ndash;2023</b></span>
+      <span class="badge" id="bYear">Year <b id="stYear">none</b></span>
+      <span class="badge" id="bSource">Source <b id="stSource">all</b></span>
+    </div>
+    <p class="hint">Hover to inspect. Click to select. Double-click to zoom. Range select drags a year window on the line chart.</p>
+  </div>
+</header>
+
+<!-- ============================================================
+     KPI STRIP
+     Four indicators that adapt to the current source/year selection.
+     ============================================================ -->
+<div class="kpi-strip" role="region" aria-label="Key indicators">
+  <div class="kpi-card">
+    <span class="kpi-lbl" id="kl1">Renewables share</span>
+    <span class="kpi-val" id="kv1">&mdash;</span>
+    <span class="kpi-unit" id="ku1">of total UK energy</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-lbl" id="kl2">Total renewables</span>
+    <span class="kpi-val" id="kv2">&mdash;</span>
+    <span class="kpi-unit" id="ku2">Mtoe</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-lbl" id="kl3">Growth since range start</span>
+    <span class="kpi-val" id="kv3">&mdash;</span>
+    <span class="kpi-unit" id="ku3">multiple</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-lbl" id="kl4">Top source</span>
+    <span class="kpi-val" id="kv4">&mdash;</span>
+    <span class="kpi-unit" id="ku4">share of total renewables</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     CHART GRID (2 x 2)
+     Row 1: line chart (primary growth question) + treemap (mix).
+     Row 2: share chart (share question) + sector chart (context).
+     ============================================================ -->
+<div class="grid">
+
+  <!-- Chart A: multi-line, renewable sources over time. -->
+  <section class="panel" aria-labelledby="t-line">
+    <h2 id="t-line">Renewable Energy Consumption by Source Over Time</h2>
+    <p class="desc">Renewable energy consumption by source, in Mtoe. Click a line or legend item to focus one source. Double-click to zoom, drag to pan, or use Range select to brush a year window.</p>
+    <div class="chart-wrap" id="c-line"></div>
+  </section>
+
+  <!-- Chart B: treemap, source mix for the active year. -->
+  <section class="panel" aria-labelledby="t-tree">
+    <h2 id="t-tree">Renewable Source Mix in <span id="treeYrLbl">the Selected Year</span></h2>
+    <p class="desc">Source mix in the active year, sized by Mtoe. Click a tile to select that source.</p>
+    <div class="chart-wrap" id="c-tree"></div>
+  </section>
+
+  <!-- Chart C: area + line + dots, renewables share of total. -->
+  <section class="panel" aria-labelledby="t-share">
+    <h2 id="t-share">Renewables as a Share of Total UK Energy Use</h2>
+    <p class="desc">Renewables as a percentage of total UK energy consumption. Click a point to set the active year.</p>
+    <div class="chart-wrap" id="c-share"></div>
+  </section>
+
+  <!-- Chart D: horizontal bar, sector comparison for active year. -->
+  <section class="panel" aria-labelledby="t-sector">
+    <h2 id="t-sector">Sector Comparison for <span id="secYrLbl">the Selected Year</span></h2>
+    <p class="desc">Supporting context panel. Renewable use across the five SIC-2007 sector groups in the active year. The total here uses a different scope from the line chart, so the two totals are not directly comparable. Double-click or scroll to zoom the value axis.</p>
+    <div class="chart-wrap" id="c-sector"></div>
+  </section>
+
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <p>Source: Office for National Statistics, &ldquo;Energy use: renewable and waste sources&rdquo;, dataset 1990 to 2023, released 5 June 2025. Values in Mtoe (million tonnes of oil equivalent). The sector chart is a supporting context panel and uses a different scope from the line chart, so the two totals are not directly comparable.</p>
+</footer>
+
+<!-- Shared tooltip element used by every chart -->
+<div id="tt" role="tooltip"></div>
+
+<!-- Scripts: D3 -> data -> state -> charts -> main (bootstrap) -->
+<script src="js/d3.v7.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
